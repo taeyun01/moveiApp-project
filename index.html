@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="style.css">
+	<title>Document</title>
+</head>
+
+<body>
+	<!-- 헤더바 -->
+	<header class="header-bar">
+		<h2>TMDB</h2>
+		<div class="header-search-box">
+			<label for="search"> 검색 : </label><input id="search" class="search-input" type="text" placeholder="검색어 입력..">
+			<!-- 검색값 출력 ui -->
+			<div class="search-result-box"></div>
+		</div>
+	</header>
+
+	<!-- 메인 영화 -->
+	<main class="main-movie-container">
+		<img class="main-movie-image">
+		<div class="main-movie-contents-box">
+			<h1 class="main-movie-title"></h1>
+			<p class="main-movie-content"></p>
+			<div>
+				<button class="main-movie-detail-btn">상세정보</button>
+			</div>
+		</div>
+	</main>
+
+	<!-- 카드 선택시 나오는 메인 영화 -->
+	<main class="select-movie-container">
+		<img class="select-movie-image" src="" alt="선택 영화 이미지">
+		<div class="select-movie-contents-box">
+			<h1 class="select-movie-title"></h1>
+			<p class="select-movie-content"></p>
+			<div class="select-movie-detail-btn-box">
+				<button class="select-movie-detail-btn">상세정보</button>
+			</div>
+		</div>
+	</main>
+
+	<!-- 영화 카드 UI -->
+	<div class="movie-cards-container">
+	</div>
+
+	<!-- 모달창 -->
+	<div class="modal-container">
+		<div class="modal-box">
+			<span class="modal-close">&times;</span>
+			<div class="modal">
+				<div class="modal-img-box">
+					<img class="modal-img" src="" alt="모달 이미지">
+				</div>
+				<div class="modal-content-box">
+					<p class="modal-No">No : <span class="modal-id"></span></p>
+					<h2> <span class="modal-title"></span></h2>
+					<p><span class="modal-star">⭐</span>: <span class="modal-average"></span></p>
+					<p class="modal-content"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="./main.js"></script>
+	<script src="./modal.js"></script>
+</body>
+
+</html>
