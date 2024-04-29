@@ -78,12 +78,12 @@ fetch(baseUrl, options)
       const cardPoster = imgUrl + movie.poster_path;
       const cardTitle = movie.title;
       const tempHtml = `
-			<div class="movie-cards-box">
+			<li class="movie-cards-box">
 				<div class="movie-cards-image-box">
 					<img class="movie-cards-image" src="${cardPoster}" alt="이미지">
 				</div>
 				<p class="movie-cards-title">${cardTitle}</p>
-			</div>`;
+			</li>`;
       movieCardsContainer.innerHTML += tempHtml;
     });
 
@@ -115,7 +115,6 @@ fetch(baseUrl, options)
         selectMovieContainer.classList.add("active");
         selectMovieImg.classList.add("active");
         selectModal();
-        console.log("몇번실행?");
       });
     });
 
@@ -146,7 +145,7 @@ fetch(baseUrl, options)
       searchResultBox.innerHTML += search_html;
     });
 
-    // 검색창 입력 시 해당 영화가 있으면 보여주기
+    // 검색창 입력 시 해당 영화가 있으면 바로 보여주기
     searchInput.addEventListener("input", (e) => {
       const searchInputValue = e.target.value.toUpperCase(); // 입력값 저장
 
@@ -154,7 +153,7 @@ fetch(baseUrl, options)
         const movieCardsBox = document.querySelectorAll(".movie-cards-box"); // 영화 카드 박스 div 모두가져오기
         const movieTitle = title;
         const searchTitleValue =
-          movieTitle.toUpperCase().indexOf(searchInputValue) > -1; // movieTitle값이 입력값에 포함되는지
+          movieTitle.toUpperCase().indexOf(searchInputValue) > -1; // 영화제목이 내가 입력한 값이 포함되는지
 
         // 검색어가 포함되어 있다면
         if (searchTitleValue) {
@@ -175,18 +174,19 @@ fetch(baseUrl, options)
       for (let i = 0; i < aTags.length; i++) {
         const searchContTag = aTags[i].getElementsByClassName("search-cont")[0];
         const searchTextValue = searchContTag.textContent; // 영화 제목 text 할당
-        const isTitle = searchTextValue.toUpperCase().indexOf(inputValue) > -1; // 제목text에 입력값이 포함돼있는지
+        const isSearchTitle =
+          searchTextValue.toUpperCase().indexOf(inputValue) > -1; // 현재 영화리스트에 내가 입력한 영화가 있는지?? 있으면 true, 없으면 false반환
 
-        isTitle
+        isSearchTitle
           ? (aTags[i].style.display = "flex") // 검색한 영화가 있으면 필터 ui 출력
           : (aTags[i].style.display = "none");
 
         // 검색 필터 클릭시
         aTags[i].addEventListener("click", () => {
-          searchResultBox.style.display = "none";
+          searchResultBox.style.display = "none"; // 검색 필터박스는 none.
           const title = aTags[i].textContent.trim(); // 내가 선택한 제목 할당 (trim()공백제거)
           searchInput.value = title; // 검색창에 제목 삽입
-          searchInput.focus();
+          searchInput.focus(); // 검색창 포커스
         });
 
         if (searchInput.value == 0) {
