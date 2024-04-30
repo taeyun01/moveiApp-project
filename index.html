@@ -7,6 +7,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="style.css">
 	<title>Document</title>
+	<script src="./main.js" type="module"></script>
+	<!-- type="module" 설정시, 독립적인 scope생성(여러 js파일에 같은 변수를 써도 문제없음), 스크립트 지연실행, Strict Mode기본내장 -->
 </head>
 
 <body>
@@ -16,7 +18,7 @@
 		<div class="header-search-box">
 			<label for="search"> 검색 : </label><input id="search" class="search-input" type="text" placeholder="검색어 입력..">
 			<!-- 검색값 출력 ui -->
-			<div class="search-result-box"></div>
+			<form class="search-result-box"></form>
 		</div>
 	</header>
 
@@ -66,7 +68,7 @@
 		</div>
 	</article>
 
-	<script src="./main.js"></script>
+
 </body>
 
 </html>

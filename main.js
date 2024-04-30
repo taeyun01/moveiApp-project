@@ -44,11 +44,11 @@ fetch(baseUrl, options)
 
     const modalContainer = document.querySelector(".modal-container"); // 모달 컨테이너
     const modalClose = document.querySelector(".modal-close"); // 모달 닫기
-    const modalTitle = document.querySelector(".modal-title"); //
-    const modalAverage = document.querySelector(".modal-average"); //
-    const modalContent = document.querySelector(".modal-content"); //
-    const modalImg = document.querySelector(".modal-img"); //
-    const modald = document.querySelector(".modal-id"); //
+    const modalTitle = document.querySelector(".modal-title"); // 모달 제목
+    const modalAverage = document.querySelector(".modal-average"); // 모달 평정
+    const modalContent = document.querySelector(".modal-content"); // 모달 내용
+    const modalImg = document.querySelector(".modal-img"); // 모달 이미지
+    const modald = document.querySelector(".modal-id"); // 모달 ID
 
     mainMovieTitle.innerHTML = randomMovieTitle; // main영화제목(랜덤)
     mainMovieImg.src = imgUrl + randomMoviePoster; // main포스터(랜덤)
@@ -56,36 +56,19 @@ fetch(baseUrl, options)
 
     searchInput.focus(); // 검색창 포커스
 
-    // 메인 상세정보 버튼
-    mainDetailBtn.addEventListener("click", () => {
-      modald.innerHTML = randomMovieId;
-      modalTitle.innerHTML = randomMovieTitle; // 모달창 영화제목(랜덤)
-      modalImg.src = imgUrl + randomMoviePoster; // 모달창 포스터(랜덤)
-      modalContent.innerHTML = randomMovieOverview; // 모달창 영화 내용(랜덤)
-      modalAverage.innerHTML = randomMovieAverage; // 모달창 영화 평점(랜덤)
-      modalContainer.classList.add("open");
-      modalContainer.classList.remove("close");
-    });
-
-    // 모달창 닫기(X)
-    modalClose.addEventListener("click", () => {
-      modalContainer.classList.add("close");
-      modalContainer.classList.remove("open");
-    });
-
-    // 영화 카드 ui
-    movieData.forEach((movie) => {
-      const cardPoster = imgUrl + movie.poster_path;
-      const cardTitle = movie.title;
-      const tempHtml = `
+    // 영화 카드 리스트 ui
+    movieCardsContainer.innerHTML = movieData
+      .map(
+        (movie) =>
+          `
 			<li class="movie-cards-box">
 				<div class="movie-cards-image-box">
-					<img class="movie-cards-image" src="${cardPoster}" alt="이미지">
+					<img class="movie-cards-image" src="${imgUrl + movie.poster_path}" alt="이미지">
 				</div>
-				<p class="movie-cards-title">${cardTitle}</p>
-			</li>`;
-      movieCardsContainer.innerHTML += tempHtml;
-    });
+				<p class="movie-cards-title">${movie.title}</p>
+			</li>`
+      )
+      .join("");
 
     const movieCardsBox =
       movieCardsContainer.getElementsByClassName("movie-cards-box"); // 영화 카드 목록
@@ -102,7 +85,7 @@ fetch(baseUrl, options)
 
     // 영화 카드 선택 시, 메인에 출력
     // HTML로 묶여진 요소들은 유사배열 객체임. for문으로 순회가능, map, forEach로 순회하고 싶다면 Array.from("유사배열")사용시 새로운 Array를 생성해줌
-    Array.from(movieCardsBox).map((movie, i) => {
+    Array.from(movieCardsBox).forEach((movie, i) => {
       movie.addEventListener("click", () => {
         selectMovieTitle.id = movieData[i].id; // 타이틀요소에 id속성 생성
         selectMovieTitle.innerHTML = movieData[i].title; // 선택한 영화 제목
@@ -122,28 +105,18 @@ fetch(baseUrl, options)
     selectDetailBtn.addEventListener("click", () => {
       selectModal();
     });
-    // 선택한 영화 모달창 데이터
-    const selectModal = () => {
-      modald.innerHTML = selectMovieTitle.id;
-      modalTitle.innerHTML = selectMovieTitle.textContent; // main영화제목(랜덤)
-      modalImg.src = selectMovieImg.src; // main포스터(랜덤)
-      modalContent.innerHTML = selectMovieContent.textContent; // main영화내용(랜덤)
-      modalAverage.innerHTML = selectMovieContent.id; // main영화 평점(랜덤)
-      modalContainer.classList.add("open");
-      modalContainer.classList.remove("close");
-    };
 
-    // 검색시 관련 검색어 생성
-    movieData.forEach((movie) => {
-      // 관련검색 html생성
-      let search_html = `
-			  <a href="#" class="search-list">
-				  <div class="search-cont">
-					  <h3 class="search-cont-title">${movie.title}</h3>
-				  </div>
-		  	</a>`;
-      searchResultBox.innerHTML += search_html;
-    });
+    // 검색시 관련 검색어 UI 출력
+    searchResultBox.innerHTML = movieData
+      .map(
+        (movie) =>
+          `<a href="#" class="search-list">
+    		  <div class="search-cont">
+    			  <h3 class="search-cont-title">${movie.title}</h3>
+    		  </div>
+      	</a>`
+      )
+      .join("");
 
     // 검색창 입력 시 해당 영화가 있으면 바로 보여주기
     searchInput.addEventListener("input", (e) => {
@@ -166,7 +139,7 @@ fetch(baseUrl, options)
       });
     });
 
-    // 검색 필터 (대,소문자 구분없이)
+    // 연관 검색
     searchInput.addEventListener("input", (e) => {
       const inputValue = e.target.value.toUpperCase();
       const aTags = searchResultBox.getElementsByTagName("a"); //searchResultBox내에 있는 a태그 전부 가져오기
@@ -181,7 +154,7 @@ fetch(baseUrl, options)
           ? (aTags[i].style.display = "flex") // 검색한 영화가 있으면 필터 ui 출력
           : (aTags[i].style.display = "none");
 
-        // 검색 필터 클릭시
+        // 연관검색 클릭시
         aTags[i].addEventListener("click", () => {
           searchResultBox.style.display = "none"; // 검색 필터박스는 none.
           const title = aTags[i].textContent.trim(); // 내가 선택한 제목 할당 (trim()공백제거)
@@ -199,12 +172,13 @@ fetch(baseUrl, options)
     searchInput.addEventListener("keydown", (e) => {
       const searchInputValue = e.target.value.toUpperCase(); // 입력값 저장
 
+      // 엔터 누를시 (엔터 코드:13)
       if (e.keyCode === 13) {
         movieTitleData.forEach((title, index) => {
           const movieCardsBox = document.querySelectorAll(".movie-cards-box"); // 영화 카드 박스 div
           const movieTitle = title;
           const searchTitleValue =
-            movieTitle.toUpperCase().indexOf(searchInputValue) > -1; // movieTitle값이 입력값에 포함되는지
+            movieTitle.toUpperCase().indexOf(searchInputValue) > -1; // 영화리스트에 내가 입력한 영화가 있는지??
 
           // 검색어가 포함되어 있다면
           if (searchTitleValue > -1 && searchTitleValue === true) {
@@ -214,6 +188,46 @@ fetch(baseUrl, options)
           }
         });
       }
+    });
+
+    // 선택한 영화 모달창 데이터
+    const selectModal = () => {
+      modalMovieData(
+        selectMovieTitle.id,
+        selectMovieTitle.textContent,
+        selectMovieImg.src,
+        selectMovieContent.textContent,
+        selectMovieContent.id
+      );
+    };
+
+    // 메인 상세정보 버튼 클릭시
+    mainDetailBtn.addEventListener("click", () => {
+      modalMovieData(
+        randomMovieId,
+        randomMovieTitle,
+        imgUrl + randomMoviePoster,
+        randomMovieOverview,
+        randomMovieAverage
+      );
+    });
+
+    // 영화 모달창 데이터
+    const modalMovieData = (id, title, poster, overview, average) => {
+      modald.innerHTML = id;
+      modalTitle.innerHTML = title;
+      modalImg.src = poster;
+      modalContent.innerHTML = overview;
+      modalAverage.innerHTML = average;
+
+      modalContainer.classList.add("open");
+      modalContainer.classList.remove("close");
+    };
+
+    // 모달창 닫기(X)
+    modalClose.addEventListener("click", () => {
+      modalContainer.classList.add("close");
+      modalContainer.classList.remove("open");
     });
   })
   .catch((err) => console.error(err));
